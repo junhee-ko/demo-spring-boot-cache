@@ -1,0 +1,26 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.4.RELEASE'
+    id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'me.jko'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // spring-boot-starter-cache는 
+    // 기본 CacheManager로 ConcurrentHashMap을 사용하고 있어서 Ehcache 2.x 로 교체하기 위해 직접 의존성을 추가하였다. 
+    compile group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.3'
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
