@@ -23,33 +23,47 @@ public class Application {
 
     @GetMapping("/member/nocache/{name}")
     @ResponseBody
-    public Member getNoCacheMember(@PathVariable String name){
+    public Member getNoCacheMember(@PathVariable String name) {
 
         long start = System.currentTimeMillis(); // 수행시간 측정
         Member member = memberRepository.findByNameNoCache(name); // db 조회
         long end = System.currentTimeMillis();
 
-        logger.info(name+ "의 NoCache 수행시간 : "+ Long.toString(end-start));
+        logger.info(name + "의 NoCache 수행시간 : " + Long.toString(end - start));
 
         return member;
     }
 
     @GetMapping("/member/cache/{name}")
     @ResponseBody
-    public Member getCacheMember(@PathVariable String name){
+    public Member getCacheMemberWithOneKey(@PathVariable String name) {
 
         long start = System.currentTimeMillis(); // 수행시간 측정
-        Member member = memberRepository.findByNameCache(name); // db 조회
+        Member member = memberRepository.findByNameCacheWithOneKey(name); // db 조회
         long end = System.currentTimeMillis();
 
-        logger.info(name+ "의 Cache 수행시간 : "+ Long.toString(end-start));
+        logger.info(name + "의 Cache 수행시간 : " + Long.toString(end - start));
 
         return member;
     }
 
+    @GetMapping("/member/cache/{name}/test/{testKey}")
+    @ResponseBody
+    public Member getCacheMemberWithAllKey(@PathVariable String name, @PathVariable String testKey) {
+
+        long start = System.currentTimeMillis(); // 수행시간 측정
+        Member member = memberRepository.findByNameCacheWithAllKey(name, testKey); // db 조회
+        long end = System.currentTimeMillis();
+
+        logger.info(name + " " + testKey + "의 Cache 수행시간 : " + Long.toString(end - start));
+
+        return member;
+    }
+
+
     @GetMapping("/member/refresh/{name}")
     @ResponseBody
-    public String refresh(@PathVariable String name){
+    public String refresh(@PathVariable String name) {
         memberRepository.refresh(name); // 캐시제거
         return "cache clear!";
     }
@@ -61,7 +75,7 @@ public class Application {
 
     @GetMapping("/")
     @ResponseBody
-    public String index(){
+    public String index() {
         return "HelloWorld";
     }
 }

@@ -24,10 +24,19 @@ public class MemberRepositoryImpl implements MemberRepository {
     // 즉, name에 따라 별도로 캐시한다는 의미이다.
     // findByNameCache 메소드의 argument에 따라 캐시되기 때문에 name이 jko인지,
     // test1인지 등 name에 캐시 여부를 체크하여 캐시 안되어 있을 경우 캐시를 하고, 있으면 캐시된걸 전달하게 된다.
-    public Member findByNameCache(String name) {
+    public Member findByNameCacheWithOneKey(String name) {
         slowQuery(2000);
         return new Member(0, name + "@gmail.com", name);
     }
+
+    @Override
+    @Cacheable(value = "findMemberCache")
+    // 두 인자값이 모두 같아야 같은 캐쉬값을 내보냄
+    public Member findByNameCacheWithAllKey(String name, String testKey) {
+        slowQuery(2000);
+        return new Member(0, name + "@gmail.com", name + " " + testKey);
+    }
+
 
     @Override
     @CacheEvict(value = "findMemberCache", key = "#name")
